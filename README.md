@@ -1,4 +1,4 @@
-# Project
+# Projecte
 
 **Autor:** Sergi Ruiz Carrasco
 
