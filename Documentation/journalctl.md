@@ -39,7 +39,7 @@ Ens hauríem de fixar en la primera línia i comprovar que és correcte.
 
 La majoria de paràmetres de la ordre s'utilitzen per a limitar l'abast de la consulta.
 
-Si s'utiliza sense paràmetres, el següent paràmetre mostrarà totes les entrades del journal (que poden ser moltes).
+Si s'utiliza sense paràmetres, la següent ordre mostrarà totes les entrades del journal (que poden ser moltes).
 
 		journalctl
 
