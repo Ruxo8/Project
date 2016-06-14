@@ -49,7 +49,7 @@ Per veure l'espai de disc ocupat pel journal, podem utilitzar *--disk-usage*:
 
 		journalctl --disk-usage
 
-### Esborrar logs anitcs
+### Esborrar logs antics
 
 Si utilitzem l'opció *--vacuum-size*, reduirem el journal indicant la mida que volem que tingui.
 
@@ -59,7 +59,7 @@ Per exemple, si volem que el journal ens ocupi només 1GB en el disc:
 
 		sudo journalctl --vacuum-size=1G
 
-Una altra manera de reduir el tamany del journal és indicantli un temps amb *--vacuum-time*.
+Una altra manera de reduir el tamany del journal és indicant un temps amb *--vacuum-time*.
 
 Aquesta opció esborrarà les entrades anteriors a la data seleccionada.
 
