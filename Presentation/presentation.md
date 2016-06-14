@@ -28,9 +28,9 @@ Les principals limitacions són:
 
 6. Funcionament simple però molt limitat.
  
-7. Facilment manipulable per atacants.
+7. Fàcilment manipulable per atacants.
 
-8. Control d'accés és inexistent.
+8. Control d'accés inexistent.
 
 ----------------
 
@@ -39,9 +39,9 @@ Les principals limitacions són:
 
 9. Metadades emmagatzemades limitades.
 
-10. Rotació automàtica no disponible. O vulnerable a atacs de DDOS.
+10. Rotació automàtica no disponible o vulnerable a atacs de DDOS.
 
-11. *Rate limiting* només disponible en algunes implementacions, però generalment no té en compte l'utilització de disc o l'assignació de serveis.
+11. *Rate limiting* només disponible en algunes implementacions, però generalment no té en compte la utilització de disc o l'assignació de serveis.
 
 ----------------
 
@@ -83,15 +83,15 @@ Els principals objectius en la creació del Journal són:
 
 10. **Base per a eines d'alt nivell**
 
-11. **Escalabilitat:** Tant per màquines petites com per a superordinadors.
+11. **Escalabilitat:** Tant per a màquines petites com per a superordinadors.
 
-12. **Universalitat:** S'adapta a les necesitats de totes les aplicacions.
+12. **Universalitat:** S'adapta a les necessitats de totes les aplicacions.
 
 ----------------
 
 # Journal
 
-13. **Clusterització i xarxa:** Accepta instalacions en multi-host.
+13. **Clusterització i xarxa:** Accepta instal·lacions en multi-host.
 
 14. **Seguretat:** Fitxers de log autenticats.
 
@@ -101,11 +101,11 @@ Els principals objectius en la creació del Journal són:
 
 Com el systemctl, el journalctl és també una utilitat del systemd.
 
-S'utilitza per a consultar i mostrar misatges del journal.
+S'utilitza per a consultar i mostrar missatges del journal.
 
-Com que el journal esta format per un o més archius binaris, el journalctl és la manera estandard de llegir-lo.
+Com que el journal està format per un o més arxius binaris, el journalctl és la manera estandard de llegir-ho.
 
-Si s'utiliza sense paràmetres, el següent paràmetre mostrarà totes les entrades del journal (que poden ser moltes).
+Si s'utiliza sense paràmetres, la següent ordre mostrarà totes les entrades del journal (que poden ser moltes).
 
 		journalctl
 
@@ -115,7 +115,7 @@ Si s'utiliza sense paràmetres, el següent paràmetre mostrarà totes les entra
 
 **-n** o **--lines=**
 
-> Mostra el numero d'entrades especificat.
+> Mostra el número d'entrades especificat.
 
 **-r** o **--reverse**
 
@@ -169,7 +169,7 @@ Per habilitar l'emmagatzematge persistent:
 
 		journalctl --unit=nom_servei1 --unit=nom_servei2 --since=today
 
-> > Logs d'un o mes serveis en una finestra de temps.
+> > Logs d'un o més serveis en una finestra de temps.
 
 ----------------
 
@@ -241,7 +241,7 @@ Implica el **--boot** i filtra per "\_TRANSPORT=kernel"
 
 **-f** o **--follow**
 
-> Mostra continuament cada entrada que s'afegeix al journal.
+> Mostra contínuament cada entrada que s'afegeix al journal.
 
 ## Per usuari
 
@@ -284,13 +284,13 @@ Els nivells de prioritat són els següents:
 
 **-o** o **--output=**
 
-Alguns valors que pot pendre són:
+Alguns valors que pot prendre són:
 
-* **cat:** mostra nomes el camp de missatge.
+* **cat:** mostra només el camp del missatge.
 
 * **export:** format binari per a transferir o realitzar backups.
 
-* **json:** formateja les entrades com a estructures de dades JSON, un per línia.
+* **json:** formateja les entrades com a estructures de dades JSON, una per línia.
 
 * **short:** és el format per defecte.
 
@@ -334,7 +334,7 @@ Són camps utilitzats pels missatges generats en el kernel.
 
 ## Camps per a fer log a favor d'un altre programa
 
-Camps utilitzats per programes per especificar que estar fent logging a favor d'un altre programa o unitat.
+Camps utilitzats per programes per especificar que està fent logging a favor d'un altre programa o unitat.
 
 COREDUMP\_UNIT=, COREDUMP\_USER\_UNIT=, OBJECT\_PID=, OBJECT\_UID=, OBJECT\_GID=, OBJECT\_COMM=, OBJECT\_EXE=, 
 OBJECT\_CMDLINE=, OBJECT\_AUDIT\_SESSION=, OBJECT\_AUDIT\_LOGINUID=, OBJECT\_SYSTEMD\_CGROUP=, OBJECT\_SYSTEMD\_SESSION=, 
@@ -346,10 +346,9 @@ OBJECT\_SYSTEMD\_OWNER\_UID=, OBJECT\_SYSTEMD\_UNIT=, OBJECT\_SYSTEMD\_USER\_UNI
 
 El journal és una eina molt potent per a recollir i administrar els logs tant del sistema com d'aplicacions.
 
-Té una gran flexibilitat a causa principalment de totes les metadades que recull i del seu sistema centralitzat.
+Té una gran flexibilitat a causa, principalment, de totes les metadades que recull i del seu sistema centralitzat.
 
-
-La ordre *journalctl* facilita molt l'utilització del journal i és molt útil per a realitzar anàlisis 
+L'ordre *journalctl* facilita molt la utilització del journal i és molt útil per a realitzar anàlisi 
 i trobar errors en diferents aplicacions o processos del sistema.
 
 ----------------
