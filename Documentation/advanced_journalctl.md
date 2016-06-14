@@ -3,43 +3,43 @@
 ## Habilitar l'emmagatzematge persistent
 
 Per defecte, el journal emmagatzema els fitxers en memòria o en un petit buffer circular en el directori */run/log/journal*.
-Això es suficient per mostrar els logs recents amb journalctl. Aquest directori és volàtil i per tant les dades no s'emmagatzemen permanentment.
+Això és suficient per mostrar els logs recents amb journalctl. Aquest directori és volàtil i, per tant, les dades no s'emmagatzemen permanentment.
 
-Amb el emmagatzemament habilitat, els fitxers del journal s'emmagatzement a */var/log/journal* el que vol dir que perduren després del boot.
+Amb l'emmagatzematge habilitat, els fitxers del journal s'emmagatzemen a */var/log/journal* el que vol dir que perduren després del boot.
 
-Abans hem vist com habilitar-lo, per fer memòria:
+Abans hem vist com habilitar-ho, per fer memòria:
 
-Per a habilitar-ho, podem cambiar la configuraciño en el fitxer: */etc/systemd/journald.conf*
+Per a habilitar-ho, podem canviar la configuració en el fitxer: */etc/systemd/journald.conf*
 A sota de *[ Journal ]* establir la opció *Storage=* com a "persistent":
 
 		. . .
 		[Journal]
 		Storage=persistent
 
-Habilitar l'emmagatzematge persistent té els següents advantatges:
+Habilitar l'emmagatzematge persistent té els següents avantatges:
 
-* Dades més complertes són emmagatzemades per solucionar errors durant un període de temps més gran.
+* Dades més completes són emmagatzemades per solucionar errors durant un període de temps més gran.
 
-* Per solucionar problemes recents, dades més complertes són disponibles després del reboot.
+* Per solucionar problemes recents, dades més completes són disponibles després del reboot.
 
-Però tambñe te inconvenients:
+Però també té inconvenients:
 
-* Encara que estigui habilitat, la quantitat d'informació emmagatzemada depèn de la memòria, i per tant no hi ha cap garantia de cubrir un període
+* Encara que estigui habilitat, la quantitat d'informació emmagatzemada depèn de la memòria i, per tant, no hi ha cap garantia de cobrir un període
 de temps en específic.
 
 * És necessàri més espai en disc per als logs.
 
 ## Control de l'accés
 
-Per defecte, els usuaris del journal sense privilegis de root només poden veure les entrades generades per ells mateixos.
+Per defecte, els usuaris del journal sense privilegis de root, només poden veure les entrades generades per ells mateixos.
 
-L'administrador del sistema por afegir usuaris al grup *adm* per tal de otorgarlis accés complet als fitxers de log:
+L'administrador del sistema pot afegir usuaris al grup *adm* per tal d'otorgar-los accés complet als fitxers de log:
 
 		usermod --append --groups=adm username
 
-El usuari *username* rebrà el mateix output del journalctl que el usuari *root*.
+L'usuari *username* rebrà el mateix output del journalctl que l'usuari *root*.
 
-És important saber que el control d'accés només funciona quan el emmagatzematge persistent està activat per al journal.
+És important saber que el control d'accés només funciona quan l'emmagatzematge persistent està activat per al journal.
 
 ## Manteniment del journal
 
@@ -51,7 +51,7 @@ Per veure l'espai de disc ocupat pel journal, podem utilitzar *--disk-usage*:
 
 ### Esborrar logs anitcs
 
-Si utilitzem la opció *--vacuum-size*, reduirem el journal indicant la mida que volem que tingui.
+Si utilitzem l'opció *--vacuum-size*, reduirem el journal indicant la mida que volem que tingui.
 
 Aquesta opció esborrarà els logs més antics fins que el tamany que ocupi el journal en el disc sigui l'indicat.
 
@@ -59,35 +59,33 @@ Per exemple, si volem que el journal ens ocupi només 1GB en el disc:
 
 		sudo journalctl --vacuum-size=1G
 
-Una altre manera de reduir el tamany del journal és indicantli un temps amb *--vacuum-time*.
+Una altra manera de reduir el tamany del journal és indicantli un temps amb *--vacuum-time*.
 
 Aquesta opció esborrarà les entrades anteriors a la data seleccionada.
 
-Si volguesim esborrar els logs que tinguesin més d'un any d'antiguitat:
+Si volguéssim esborrar els logs que tinguessin més d'un any d'antiguitat:
 
 		sudo journalctl --vacum-time=1years
 
 ## Limitar el tamany del journal
 
-Podem configurar el journal per posar-li límits en l'espai que pot ocupar si editem el fitxer de configuració */etc/systemd/journald.conf*
+Podem configurar el journal, per posar-li límits en l'espai que pot ocupar, si editem el fitxer de configuració */etc/systemd/journald.conf*
 
 Les següents opcions són les que es poden utilitzar per limitar el tamany del journal:
 
 * **SystemMaxUse=**: Especifica el tamany màxim d'emmagatzematge persistent que pot ser utilitzat pel journal.
 
-* **SystemKeepFree=**: Especifica el tamany mínim d'emmagatzemantge que el journal ha de deixar lliure quan afegeix entrades al 
-emmagatzematge persistent.
+* **SystemKeepFree=**: Especifica el tamany mínim d'emmagatzematge que el journal ha de deixar lliure quan afegeix entrades a l'emmagatzematge persistent.
 
-* **SystemMaxFileSize=**: Controla el tamany màxim d'un fitxer en emmagatzemantge persistent abans de ser rotat.
+* **SystemMaxFileSize=**: Controla el tamany màxim d'un fitxer en emmagatzematge persistent abans de ser rotat.
 
 * **RuntimeMaxUse=**: Especifica el tamany màxim de disc que pot ser utilitzat en emmagatzematge volàtil (a */run*).
 
-* **RuntimeKeepFree=**: Especifica la quantitat mínima d'espai que el journal ha de deixar lliure quan afegeix entrades al
-emmagatzematge volàtil (a */run*)
+* **RuntimeKeepFree=**: Especifica la quantitat mínima d'espai que el journal ha de deixar lliure quan afegeix entrades a l'emmagatzematge volàtil (a */run*)
 
-* **RuntimeMaxFileSize=**: Especifica el tamany màxim d'un fitxer en emmagatzemament volàtil (a */run*) abans de ser rotat.
+* **RuntimeMaxFileSize=**: Especifica el tamany màxim d'un fitxer en emmagatzematge volàtil (a */run*) abans de ser rotat.
 
-## Administrar els logs desde un entorn gràfic.
+## Administrar els logs des d'un entorn gràfic.
 
 Primer hem d'instalar l'aplicació:
 
@@ -97,4 +95,4 @@ A continuació ja la podrem executar:
 
 		gnome-system-log
 
-Aquesta aplicació ens permet consultar i filtrar graficament qualsevol fitxer de logs existent.
+Aquesta aplicació ens permet consultar i filtrar gràficament qualsevol fitxer de logs existent.
