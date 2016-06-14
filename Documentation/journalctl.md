@@ -4,6 +4,39 @@ Com el systemctl, el journalctl és també una utilitat del systemd.
 S'utilitza per a consultar i mostrar misatges del journal.
 Com que el journal esta format per un o més archius binaris, el journalctl és la manera estandard de llegir-lo.
 
+Abans de començar a utilitzar el journal, es necessàri asegurar-se de que que el temps del sistema és correcte.
+Per això primer mostrarem les zones horàries disponibles:
+
+		timedatectl list-timezones
+
+Com surten moltes posibilitats, serà millor acotar la búsqueda:
+
+		timedatectl list-timezones | grep "Europe"
+
+Finalment, establim la zona horària adecuada:
+
+		sudo timedatectl set-timezone "zone"
+
+En el nostre cas:
+
+		sudo timedatectl set-timezone Europe/Madrid
+
+Per a comprobar-ho:
+
+		timedatectl status
+
+		      Local time: Tue 2016-06-07 09:29:20 CEST
+		  Universal time: Tue 2016-06-07 07:29:20 UTC
+		        RTC time: Tue 2016-06-07 09:29:20
+		       Time zone: Europe/Madrid (CEST, +0200)
+		 Network time on: yes
+		NTP synchronized: yes
+		 RTC in local TZ: yes
+
+Ens hauriem de fixar en la primera línia i comprobar que és correcte.
+
+##Ús bàsic del journalctl
+
 La majoria de paràmetres de la ordre s'utilitzen per a limitar l'abast de la consulta.
 
 Si s'utiliza sense paràmetres, el següent paràmetre mostrarà totes les entrades del journal (que poden ser moltes).
@@ -32,13 +65,36 @@ Per veure els missatges relacionats amb l'arrencada actual, s'ha d'utilitzar el 
 
 		journalctl --boot
 
+### Boots anteriors
+
+Normalment, voldrem consultar informació sobre l¡arrencada actual, però a vegades la informació d'arrencades anteriors també ens serà útil.
+Alguns distribucions habiliten l'enmagatzemament d'informació d'anteriors arrencades per defecte, per d'altres no.
+Per a habilitar-ho, podem cambiar la configuraciño en el fitxer: */etc/systemd/journald.conf*
+A sota de *[ Journal ]* establir la opció *Storage=* com a "persistent":
+
+		. . .
+		[Journal]
+		Storage=persistent
+
+També haurem de crear el directori on es guardaran els fitxers de log (*/var/log/journal*):
+
+		sudo mkdir -p /var/log/journal
+
+I reiniciar el journald per aplicar els canvis:
+
+		systemctl restart systemd-journald
+
 Per a veure les entrades relacionades amb l'anterior arrencada s'utilitza el modificador *-1*, per l'anterior: *-2*; i així succesivament.
 
-		journalctl --boot -1
+		journalctl --boot=-1
 
 Per a llistar les arrencades del sistema s'utilitza el paràmetre *--list-boots*:
 
 		journalctl --list-boots
+
+En cas de que no estiguem utilitzant aquesta opció, el journalctl insertarà una línia cada vegada que el sistema s'ha apagat.
+
+		-- Reboot --
 
 ## Rangs de temps
 
@@ -52,45 +108,96 @@ Per a mostrar els logs entre 2 dates i hores:
 
 		journalctl --since="2016-05-23 12:00:00" --until="2016-05-24 12:00:00"
 
-## Per Unit
+## Per unit
 
 Per mostrar entrades d'un servei del sistema, s'utilitza el paràmetre *-u* o *--unit=*.
 
-		journalctl --unit nom-servei
+		journalctl --unit=nom-servei
 
 Es poden mostrar entrades de multiples serveis:
 
-		journalctl --unit nom_servei1 --unit nom_servei2
+		journalctl --unit=nom_servei1 --unit=nom_servei2
+
+Per mostrar, per exemple, els missatges relacionats amb un o mes serveis executats avui:
+
+		journalctl --unit=nom_servei1 --unit=nom_servei2 --since=today
+
+## Per camp
+
+A vegades ens pot interesar filtrar els missatges per el número de PID.
+Per exemple: si estiguesim interesats en el procés que té el PID 6000, hauriem de seleccionar els missatges on el camp
+_PID fos 600. Per a aconseguir això faríem:
+
+		journalctl _PID=6000
+
+Per filtrar per el UID:
+
+		journalctl _UID="num UID"
+
+I per filtrar per el GID:
+
+		journalctl _GID="num GID"
+
+Aquest són exemples de camps que es poden utilitzar per filtrar. 
+Hi han camps que s'especifiquen per el servei que escriu el log, i d'altres que els escriu el journal en el moment que es realitza el log
+agafant les dades del sistema.
+El "_" de davant d'un camp, ens indica que és el journal el que ha escrit aquest camp.
+
+Per tant si volguesim filtrar per qualsevol camp:
+
+		journalctl "nomcamp"="valorcamp"
+
+També es pot filtrar per més d'un camp a la vegada:
+
+		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2"
+
+Per l'exemple anterior, si volguesim que es cumplis només una de les dues condicions (**OR**):
+
+		journalctl "nomcamp1"="valorcamp1" + "nomcamp2"="valorcamp2"
+
+De totes formes, si posem més d'una condició per a un mateix camp, el journalctl ja ho entendria com a un OR.
+Per tant aquesta ordre:
+
+		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2" "nomcamp2"="valorcamp3"
+
+Seria com fer: *("nomcamp1"="valorcamp1" AND ("nomcamp2"="valorcamp2" OR "nomcamp2"="valorcamp3"))*
+
+A l'hora de filtrar, el camp *-F* o *--field=* o  ens serveix per mostrar els possibles valors dels quals el journal té entrades.
+Per exemple, si volguessim veure els valors de GID dels qual el journal té entrades:
+
+		journalctl --field=_GID
+
+Per tant si volguesim mostrar tots els valor que té el journal per un camp:
+
+		journalctl --field="nomcamp"
+
+Per a veure informació sobre els camps de journal:
+
+		man systemd.journal-fields
+
+## Per ruta
+
+També es pot filtrar per la ruta de l'executable (si és que existeix).
+
+Si la ruta conté un executable, journalctl mostrarà totes les entrades que tinguin relació amb aquell executable.
+
+Per exemple, si volguesim trobar totes les entrades relacionades amb el *bash*:
+
+		journalctl /usr/bin/bash
+
+## Mostrar missatges del kernel
+
+Per mostrar missatges relacionats amb el kernel, hem d'utilitzar *-k* o *--dmesg*
+
+		journalctl --dmesg
+
+Aquest argument implica el *-b* o *--boot* i filtra per *"_TRANSPORT=kernel"*
+
+Si volguesim mostrar missatges de boots anteriors, podriem filtrar-los amb *--boot=nºboot*
 
 ## Follow
 
 Per a mostrar continuament els missatges de log que s'afegeixen, s'utilitza *-f* o *--follow*.
-
-## Formats de sortida
-
-El paràmetre *-o* o *--output=* ens permetrà seleccionar el format amb el que volem que el journalctl ens mostri les entrades.
-
-Els valors que pot pendre són:
-
-* **cat:** mostra nomes el camp de missatge.
-
-* **export:** un format binari pensat per transferir o fer un back up.
-
-* **json:** formateja les entrades com a estructures de dades JSON, un per línia.
-
-* **json-pretty:** formateja les entrades com a estructures de dades JSON però en múltiples línies per tal de fer-ho més llegible per a humans.
-
-* **json-sse:** formateja les entrades com a estructures de dades de JSON embolcallades per que sigui compatible amb server-sent event.
-
-* **short:** és el format per defecte.
-
-* **short-iso:** és el format per defecte modificat per tal que mostri els timestamps en format ISO 8601.
-
-* **short-monotonic:** el mateix que el format *short* però mostra els timestamps en format monòton.
-
-* **short-precise:** el mateix que el format *short* però amb precisió de microsegons.
-
-* **verbose:** mostra l'estructura sencera d'elements amb tots els camps.
 
 ## Per prioritat
 
@@ -109,14 +216,53 @@ Els nivells de prioritat són els següents:
 * 6: info
 * 7: debug
 
+Amb *-p* o *--priority* es pot utilitzar tant el número de prioritat com el nom de la prioritat.
+
 Quan seleccionem una prioritat, el journalctl mostrarà tots els d'aquella priotitat i els que estan per sobre.
 És a dir, si seleccionem prioritat 2, mostrarà les entrades de prioritat 2, 1 i 0.
 
-## Per usuari
+# Modificar l'aparença del journal
 
-Es poden filtrar les entrades relacionades amb qualsevol usuari mitjançant el seu UID:
+## Tota la informació
 
-		journalctl \_UID=1000
+Amb *-a* o *--all* el journalctl mostrarà tota la informació encara que contingui caràctens no imprimibles.
+
+		journalctl --all
+
+## Sortida
+
+Per defecte el journalctl mostra la sortida en un paginador tipus *less*, pero si volem processar la sortida,
+serà millor que mostri la sortida per sortida estàndard.
+
+Això es pot especificar amb *--no-pager*:
+
+		journalctl --no-pager
+
+## Formats de sortida
+
+El paràmetre *-o* o *--output=* ens permetrà seleccionar el format amb el que volem que el journalctl ens mostri les entrades.
+
+Els valors que pot pendre són:
+
+* **cat:** mostra només el camp de missatge.
+
+* **export:** un format binari pensat per transferir o fer un back up.
+
+* **json:** formateja les entrades com a estructures de dades JSON, un per línia.
+
+* **json-pretty:** formateja les entrades com a estructures de dades JSON però en múltiples línies per tal de fer-ho més llegible per a humans.
+
+* **json-sse:** formateja les entrades com a estructures de dades de JSON embolcallades per que sigui compatible amb server-sent event.
+
+* **short:** és el format per defecte.
+
+* **short-iso:** és el format per defecte modificat per tal que mostri els timestamps en format ISO 8601.
+
+* **short-monotonic:** el mateix que el format *short* però mostra els timestamps en format monòton.
+
+* **short-precise:** el mateix que el format *short* però amb precisió de microsegons.
+
+* **verbose:** mostra l'estructura sencera d'elements amb tots els camps.
 
 # Camps del Journal
 
@@ -250,5 +396,3 @@ plataformes i archius de journal.
 * \_\_MONOTONIC\_TIMESTAMP=
 > El timestamp monòton del moment en que el journal ha rebut l'entrada en microsegons. Per a ser útil com a adreça per a la
 entrada, hauria de ser combinat amb la ID de boot ("\_BOOT\_ID=").
-
-
