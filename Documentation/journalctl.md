@@ -1,15 +1,15 @@
 # Journalctl
 
 Com el systemctl, el journalctl és també una utilitat del systemd.
-S'utilitza per a consultar i mostrar misatges del journal.
-Com que el journal esta format per un o més archius binaris, el journalctl és la manera estandard de llegir-lo.
+S'utilitza per a consultar i mostrar missatges del journal.
+Com que el journal està format per un o més arxius binaris, el journalctl és la manera estandard de llegir-ho.
 
-Abans de començar a utilitzar el journal, es necessàri asegurar-se de que que el temps del sistema és correcte.
+Abans de començar a utilitzar el journal, és necessàri asegurar-se de que el temps del sistema és correcte.
 Per això primer mostrarem les zones horàries disponibles:
 
 		timedatectl list-timezones
 
-Com surten moltes posibilitats, serà millor acotar la búsqueda:
+Com surten moltes possibilitats, serà millor acotar la búsqueda:
 
 		timedatectl list-timezones | grep "Europe"
 
@@ -33,7 +33,7 @@ Per a comprobar-ho:
 		NTP synchronized: yes
 		 RTC in local TZ: yes
 
-Ens hauriem de fixar en la primera línia i comprobar que és correcte.
+Ens hauríem de fixar en la primera línia i comprovar que és correcte.
 
 ##Ús bàsic del journalctl
 
@@ -43,19 +43,19 @@ Si s'utiliza sense paràmetres, el següent paràmetre mostrarà totes les entra
 
 		journalctl
 
-Al executar journalctl la primera línia sera semblant a:
+A l'executar journalctl la primera línia serà semblant a:
 
 		-- Logs begin at Sat 2015-12-19 15:56:22 CET, end at Tue 2016-05-24 22:45:42 CEST. --
 
 Informant sobre les dates que cobreixen les entrades.
 
-A continuació el journal mostrarà les entrades com si les llegisim amb un *less*
+A continuació el journal mostrarà les entrades com si les llegissim amb un *less*
 
 Podem limitar el nombre d'entrades a mostrar i mostrarà les 'n' entrades més recents amb *-n* o *--lines=*
 
 		journalctl --lines 20
 
-El paràmetre *-r* o *--reverse* mostrarà les entrades en ordre cronològic invers, per tant mostrarà primer les més recents.
+El paràmetre *-r* o *--reverse* mostrarà les entrades en ordre cronològic invers, per tant, mostrarà primer les més recents.
 
 		journalctl -r
 
@@ -67,10 +67,10 @@ Per veure els missatges relacionats amb l'arrencada actual, s'ha d'utilitzar el 
 
 ### Boots anteriors
 
-Normalment, voldrem consultar informació sobre l¡arrencada actual, però a vegades la informació d'arrencades anteriors també ens serà útil.
-Alguns distribucions habiliten l'enmagatzemament d'informació d'anteriors arrencades per defecte, per d'altres no.
-Per a habilitar-ho, podem cambiar la configuraciño en el fitxer: */etc/systemd/journald.conf*
-A sota de *[ Journal ]* establir la opció *Storage=* com a "persistent":
+Normalment, voldrem consultar informació sobre l'arrencada actual, però, a vegades, la informació d'arrencades anteriors també ens serà útil.
+Algunes distribucions habiliten l'enmagatzemament d'informació d'anteriors arrencades per defecte, per d'altres no.
+Per a habilitar-ho, podem canviar la configuració en el fitxer: */etc/systemd/journald.conf*
+A sota de *[ Journal ]* establir l'opció *Storage=* com a "persistent":
 
 		. . .
 		[Journal]
@@ -100,7 +100,7 @@ En cas de que no estiguem utilitzant aquesta opció, el journalctl insertarà un
 
 Per a mostrar les entrades en una finestra de temps específica, podem utilitzar els paràmetres *--since=* i *--until=*.
 
-Per a mostrar els logs de la última hora:
+Per a mostrar els logs de l'última hora:
 
 		journalctl --since="1 hour ago"
 
@@ -114,18 +114,18 @@ Per mostrar entrades d'un servei del sistema, s'utilitza el paràmetre *-u* o *-
 
 		journalctl --unit=nom-servei
 
-Es poden mostrar entrades de multiples serveis:
+Es poden mostrar entrades de múltiples serveis:
 
 		journalctl --unit=nom_servei1 --unit=nom_servei2
 
-Per mostrar, per exemple, els missatges relacionats amb un o mes serveis executats avui:
+Per mostrar, per exemple, els missatges relacionats amb un o més serveis executats avui:
 
 		journalctl --unit=nom_servei1 --unit=nom_servei2 --since=today
 
 ## Per camp
 
-A vegades ens pot interesar filtrar els missatges per el número de PID.
-Per exemple: si estiguesim interesats en el procés que té el PID 6000, hauriem de seleccionar els missatges on el camp
+A vegades, ens pot interessar filtrar els missatges per el número de PID.
+Per exemple: si estiguéssim interessats en el procés que té el PID 6000, hauríem de seleccionar els missatges on el camp
 _PID fos 600. Per a aconseguir això faríem:
 
 		journalctl _PID=6000
@@ -138,12 +138,12 @@ I per filtrar per el GID:
 
 		journalctl _GID="num GID"
 
-Aquest són exemples de camps que es poden utilitzar per filtrar. 
-Hi han camps que s'especifiquen per el servei que escriu el log, i d'altres que els escriu el journal en el moment que es realitza el log
+Aquests són exemples de camps que es poden utilitzar per filtrar. 
+Hi han camps que s'especifiquen pel servei que escriu el log, i d'altres que els escriu el journal en el moment que es realitza el log
 agafant les dades del sistema.
 El "_" de davant d'un camp, ens indica que és el journal el que ha escrit aquest camp.
 
-Per tant si volguesim filtrar per qualsevol camp:
+Per tant, si volguéssim filtrar per qualsevol camp:
 
 		journalctl "nomcamp"="valorcamp"
 
@@ -151,23 +151,23 @@ També es pot filtrar per més d'un camp a la vegada:
 
 		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2"
 
-Per l'exemple anterior, si volguesim que es cumplis només una de les dues condicions (**OR**):
+Per l'exemple anterior, si volguéssim que es complís només una de les dues condicions (**OR**):
 
 		journalctl "nomcamp1"="valorcamp1" + "nomcamp2"="valorcamp2"
 
 De totes formes, si posem més d'una condició per a un mateix camp, el journalctl ja ho entendria com a un OR.
-Per tant aquesta ordre:
+Per tant, aquesta ordre:
 
 		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2" "nomcamp2"="valorcamp3"
 
 Seria com fer: *("nomcamp1"="valorcamp1" AND ("nomcamp2"="valorcamp2" OR "nomcamp2"="valorcamp3"))*
 
 A l'hora de filtrar, el camp *-F* o *--field=* o  ens serveix per mostrar els possibles valors dels quals el journal té entrades.
-Per exemple, si volguessim veure els valors de GID dels qual el journal té entrades:
+Per exemple, si volguéssim veure els valors de GID dels qual el journal té entrades:
 
 		journalctl --field=_GID
 
-Per tant si volguesim mostrar tots els valor que té el journal per un camp:
+Per tant, si volguéssim mostrar tots els valors que té el journal per un camp:
 
 		journalctl --field="nomcamp"
 
@@ -181,7 +181,7 @@ També es pot filtrar per la ruta de l'executable (si és que existeix).
 
 Si la ruta conté un executable, journalctl mostrarà totes les entrades que tinguin relació amb aquell executable.
 
-Per exemple, si volguesim trobar totes les entrades relacionades amb el *bash*:
+Per exemple, si volguéssim trobar totes les entrades relacionades amb el *bash*:
 
 		journalctl /usr/bin/bash
 
@@ -193,7 +193,7 @@ Per mostrar missatges relacionats amb el kernel, hem d'utilitzar *-k* o *--dmesg
 
 Aquest argument implica el *-b* o *--boot* i filtra per *"_TRANSPORT=kernel"*
 
-Si volguesim mostrar missatges de boots anteriors, podriem filtrar-los amb *--boot=nºboot*
+Si volguéssim mostrar missatges de boots anteriors, podríem filtrar-los amb *--boot=nºboot*
 
 ## Follow
 
@@ -225,7 +225,7 @@ Quan seleccionem una prioritat, el journalctl mostrarà tots els d'aquella priot
 
 ## Tota la informació
 
-Amb *-a* o *--all* el journalctl mostrarà tota la informació encara que contingui caràctens no imprimibles.
+Amb *-a* o *--all* el journalctl mostrarà tota la informació encara que contingui caràcters no imprimibles.
 
 		journalctl --all
 
@@ -252,7 +252,7 @@ Els valors que pot pendre són:
 
 * **json-pretty:** formateja les entrades com a estructures de dades JSON però en múltiples línies per tal de fer-ho més llegible per a humans.
 
-* **json-sse:** formateja les entrades com a estructures de dades de JSON embolcallades per que sigui compatible amb server-sent event.
+* **json-sse:** formateja les entrades com a estructures de dades de JSON embolcallades per a que sigui compatible amb server-sent event.
 
 * **short:** és el format per defecte.
 
@@ -271,7 +271,7 @@ Els valors que pot pendre són:
 Els camps d'usuari són camps que provenen directament del client i són emmagatzemats al journal.
 
 * MESSAGE=
-> El missatge en format llegible per a humans. Es el text principal que es mostra a l'usuari, normalment no està traduit i no
+> El missatge en format llegible per a humans. És el text principal que es mostra a l'usuari, normalment no està traduït i no
 està pensat per ser parsejat per a metadades.
 
 * MESSAGE\_ID=
@@ -285,7 +285,7 @@ Els desenvolupadors poden generar un de nou amb *journalctl --new-id*.
 > La localització del codi que genera el missatge. Conté el nom de fitxer, el número de linia i el nom de la funció.
 
 * ERRNO=
-> El numero d'error UNIX de baix nivell.
+> El número d'error UNIX de baix nivell.
 
 * SYSLOG\_FACILITY=, SYSLOG\_IDENTIFIER=, SYSLOG\_PID=
 > Camps compatibles amb el syslog. Contenen la facility, l'identificador i el PID.
@@ -307,14 +307,14 @@ Els camps precedits per '\_' són camps segurs. Són camps afegits pel journal i
 > La sessió i el UID de login del procés.
 
 * \_SYSTEMD\_CGROUP=, \_SYSTEMD\_SESSION=, \_SYSTEMD\_UNIT=, \_SYSTEMD\_USER\_UNIT=, \_SYSTEMD\_OWNER\_UID=, \_SYSTEMD\_SLICE=
-> La ruta del grup de control, la ID de la sessió de systemd, el nom de unitat del systemd, el nom d'usuari de la sessió del systemd, 
+> La ruta del grup de control, la ID de la sessió de systemd, el nom de la unitat del systemd, el nom d'usuari de la sessió del systemd, 
 el UID del propietari de la sessió i la part de la unitat del systemd del procés.
 
 * \_SELINUX_CONTENT=
 > El context de seguretat del SELinux.
 
 * \_SOURCE\_REALTIME\_TIMESTAMP=
-> El primer camp segur de data i hora. Esta en microsegons.
+> El primer camp segur de data i hora. Està en microsegons.
 
 * \_BOOT\_ID=
 > La ID de boot del kernel en el boot en que s'origina la entrada.
@@ -357,7 +357,7 @@ Són camps utilitzats pels missatges generats en el kernel.
 > El nom del subsistema del kernel.
 
 * \_UDEV\_SYSNAME=
-> El nom del sipositiu del kernel tal i com es mostra en el arbre de dispositius sota /sys.
+> El nom del sipositiu del kernel tal i com es mostra en l'arbre de dispositius sota /sys.
 
 * \_UDEV\_DEVNODE=
 > La ruta al node de dispositiu del dispositiu a /dev.
@@ -379,19 +379,19 @@ Camps utilitzats pel *systemd-coredump*:
 
 * OBJECT\_UID=, OBJECT\_GID=, OBJECT\_COMM=, OBJECT\_EXE=, OBJECT\_CMDLINE=, OBJECT\_AUDIT\_SESSION=, OBJECT\_AUDIT\_LOGINUID=, 
 OBJECT\_SYSTEMD\_CGROUP=, OBJECT\_SYSTEMD\_SESSION=, OBJECT\_SYSTEMD\_OWNER\_UID=, OBJECT\_SYSTEMD\_UNIT=, OBJECT\_SYSTEMD\_USER\_UNIT=
-> Aquests són camps afegits automaticament per journal. El seu significat és el mateix que:
+> Aquests són camps afegits automàticament pel journal. El seu significat és el mateix que:
 \_UID=, \_GID=, \_COMM=, \_EXE=, \_CMDLINE=, \_AUDIT\_SESSION=, \_AUDIT\_LOGINUID=, 
 \_SYSTEMD\_CGROUP=, \_SYSTEMD\_SESSION=, \_SYSTEMD\_UNIT=, \_SYSTEMD\_USER\_UNIT=, and \_SYSTEMD\_OWNER\_UID=
-però fan referencia al procés que especifica el PID, en comptes del procés que ha enviat l'entrada.
+però fan referència al procés que especifica el PID, en comptes del procés que ha enviat l'entrada.
 
 ## Camps d'adreça
 
 * \_\_CURSOR=
-> El cursor per a la entrada. Unicament descriu la posició d'una entrada en el journal i es portable entra màquines, 
-plataformes i archius de journal.
+> El cursor per a la entrada. Únicament descriu la posició d'una entrada en el journal i és portable entre màquines, 
+plataformes i arxius de journal.
 
 * \_\_REALTIME\_TIMESTAMP=
-> El timestamp en que el journal ha rebut la entrada en microsegons.
+> El timestamp en que el journal ha rebut l'entrada en microsegons.
 
 * \_\_MONOTONIC\_TIMESTAMP=
 > El timestamp monòton del moment en que el journal ha rebut l'entrada en microsegons. Per a ser útil com a adreça per a la
