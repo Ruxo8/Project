@@ -147,7 +147,7 @@ Per tant, si volguéssim filtrar per qualsevol camp:
 
 		journalctl "nomcamp"="valorcamp"
 
-També es pot filtrar per més d'un camp a la vegada:
+També es pot filtrar per més d'un camp a la vegada (**AND**):
 
 		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2"
 
@@ -155,14 +155,14 @@ Per l'exemple anterior, si volguéssim que es complís només una de les dues co
 
 		journalctl "nomcamp1"="valorcamp1" + "nomcamp2"="valorcamp2"
 
-De totes formes, si posem més d'una condició per a un mateix camp, el journalctl ja ho entendria com a un OR.
+De totes formes, si posem més d'una condició per a un mateix camp, el journalctl ja ho entendrà com un OR.
 Per tant, aquesta ordre:
 
 		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2" "nomcamp2"="valorcamp3"
 
 Seria com fer: *("nomcamp1"="valorcamp1" AND ("nomcamp2"="valorcamp2" OR "nomcamp2"="valorcamp3"))*
 
-A l'hora de filtrar, el camp *-F* o *--field=* o  ens serveix per mostrar els possibles valors dels quals el journal té entrades.
+A l'hora de filtrar, el camp *-F* o *--field=* ens serveix per mostrar els possibles valors dels quals el journal té entrades.
 Per exemple, si volguéssim veure els valors de GID dels qual el journal té entrades:
 
 		journalctl --field=_GID
@@ -171,7 +171,7 @@ Per tant, si volguéssim mostrar tots els valors que té el journal per un camp:
 
 		journalctl --field="nomcamp"
 
-Per a veure informació sobre els camps de journal:
+Per a veure informació sobre els camps del journal:
 
 		man systemd.journal-fields
 
@@ -218,7 +218,7 @@ Els nivells de prioritat són els següents:
 
 Amb *-p* o *--priority* es pot utilitzar tant el número de prioritat com el nom de la prioritat.
 
-Quan seleccionem una prioritat, el journalctl mostrarà tots els d'aquella priotitat i els que estan per sobre.
+Quan seleccionem una prioritat, el journalctl mostrarà tots els logs d'aquella priotitat i els que estan per sobre.
 És a dir, si seleccionem prioritat 2, mostrarà les entrades de prioritat 2, 1 i 0.
 
 # Modificar l'aparença del journal
@@ -248,7 +248,7 @@ Els valors que pot pendre són:
 
 * **export:** un format binari pensat per transferir o fer un back up.
 
-* **json:** formateja les entrades com a estructures de dades JSON, un per línia.
+* **json:** formateja les entrades com a estructures de dades JSON, una per línia.
 
 * **json-pretty:** formateja les entrades com a estructures de dades JSON però en múltiples línies per tal de fer-ho més llegible per a humans.
 
@@ -282,7 +282,7 @@ Els desenvolupadors poden generar un de nou amb *journalctl --new-id*.
 > Un valor de prioritat enre 0 i 7.
 
 * CODE\_FILE=, CODE\_LINE=, CODE\_FUNC=
-> La localització del codi que genera el missatge. Conté el nom de fitxer, el número de linia i el nom de la funció.
+> Localització del codi que genera el missatge. Conté el nom del fitxer, el número de la línia i el nom de la funció.
 
 * ERRNO=
 > El número d'error UNIX de baix nivell.
@@ -295,7 +295,7 @@ Els desenvolupadors poden generar un de nou amb *journalctl --new-id*.
 Els camps precedits per '\_' són camps segurs. Són camps afegits pel journal i no poden ser modificats per un usuari.
 
 * \_PID=, \_UID=, \_GID=
-> La ID de procés, usuari, grup del procés que origina l'entrada.
+> La ID de procés, d'usuari i de grup del procés que origina l'entrada.
 
 * \_COMM=, \_EXE=, \_CMDLINE=
 > El nom, la ruta de l'executable i la línia de comandes del procés que origina l'entrada.
@@ -357,17 +357,17 @@ Són camps utilitzats pels missatges generats en el kernel.
 > El nom del subsistema del kernel.
 
 * \_UDEV\_SYSNAME=
-> El nom del sipositiu del kernel tal i com es mostra en l'arbre de dispositius sota /sys.
+> El nom del dispositiu del kernel tal i com es mostra en l'arbre de dispositius sota /sys.
 
 * \_UDEV\_DEVNODE=
 > La ruta al node de dispositiu del dispositiu a /dev.
 
 * \_UDEV\_DEVLINK=
-> Nom adicional d'enllaç simbòlics que apunten al node de dispositiu a /dev.
+> Nom adicional d'enllaç simbòlic que apunta al node de dispositiu a /dev.
 
 ## Camps per a fer log a favor d'un altre programa
 
-Camps utilitzats per programes per especificar que estar fent logging a favor d'un altre programa o unitat.
+Camps utilitzats per programes per especificar que està fent logging a favor d'un altre programa o unitat.
 
 Camps utilitzats pel *systemd-coredump*:
 
