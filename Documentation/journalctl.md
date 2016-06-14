@@ -242,7 +242,7 @@ Això es pot especificar amb *--no-pager*:
 
 El paràmetre *-o* o *--output=* ens permetrà seleccionar el format amb el que volem que el journalctl ens mostri les entrades.
 
-Els valors que pot pendre són:
+Els valors que pot prendre són:
 
 * **cat:** mostra només el camp de missatge.
 
