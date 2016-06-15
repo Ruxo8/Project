@@ -167,7 +167,8 @@ Per habilitar l'emmagatzematge persistent:
 
 > Serveix per a mostrar els logs d'un servei en concret.
 
-		journalctl --unit=nom_servei1 --unit=nom_servei2 --since=today
+		journalctl --unit=nom\_servei1 
+		--unit=nom\_servei2 --since=today
 
 > > Logs d'un o més serveis en una finestra de temps.
 
@@ -197,19 +198,24 @@ Per filtrar per qualsevol camp:
 
 Per filtrar per més d'un camp a la vegada (AND):
 
-		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2"
+		journalctl "nomcamp1"="valorcamp1" 
+		"nomcamp2"="valorcamp2"
 
 Per filtrar per un camp o un altre (OR):
 
-		journalctl "nomcamp1"="valorcamp1" + "nomcamp2"="valorcamp2"
-
-"nomcamp1"="valorcamp1" **AND** **(**"nomcamp2"="valorcamp2" **OR** "nomcamp2"="valorcamp3"**)**
-
-		journalctl "nomcamp1"="valorcamp1" "nomcamp2"="valorcamp2" "nomcamp2"="valorcamp3"
+		journalctl "nomcamp1"="valorcamp1" 
+		+ "nomcamp2"="valorcamp2"
 
 ----------------
 
 ## Per camp
+
+
+"nomcamp1"="valorcamp1" **AND** **(**"nomcamp2"="valorcamp2" **OR** "nomcamp2"="valorcamp3"**)**
+
+		journalctl "nomcamp1"="valorcamp1" 
+		"nomcamp2"="valorcamp2" 
+		"nomcamp2"="valorcamp3"
 
 Per trobar tots els valor que conté el journal per a un camp:
 
@@ -242,12 +248,6 @@ Implica el **--boot** i filtra per "\_TRANSPORT=kernel"
 **-f** o **--follow**
 
 > Mostra contínuament cada entrada que s'afegeix al journal.
-
-## Per usuari
-
-> Es poden filtrar les entrades relacionades amb qualsevol usuari mitjançant el seu UID:
-
-		journalctl \_UID=nºUID
 
 ----------------
 
@@ -316,7 +316,7 @@ Són camps afegits pel journal i no poden ser modificats per un usuari.
 
 \_PID=, \_UID=, \_GID=, \_COMM=, \_EXE=, \_CMDLINE=, \_CAP\_EFFECTIVE=, \_AUDIT\_SESSION=, \_AUDIT\_LOGINUID=, 
 \_SYSTEMD\_CGROUP=, \_SYSTEMD\_SESSION=, \_SYSTEMD\_UNIT=, \_SYSTEMD\_USER\_UNIT=, \_SYSTEMD\_OWNER\_UID=, \_SYSTEMD\_SLICE=, 
-\_SELINUX_CONTENT=, \_SOURCE\_REALTIME\_TIMESTAMP=, \_BOOT\_ID=, \_MACHINE\_ID=, \_HOSTNAME=, \_TRANSPORT=
+\_SELINUX\_CONTENT=, \_SOURCE\_REALTIME\_TIMESTAMP=, \_BOOT\_ID=, \_MACHINE\_ID=, \_HOSTNAME=, \_TRANSPORT=
 
 ----------------
 
@@ -339,6 +339,60 @@ Camps utilitzats per programes per especificar que està fent logging a favor d'
 COREDUMP\_UNIT=, COREDUMP\_USER\_UNIT=, OBJECT\_PID=, OBJECT\_UID=, OBJECT\_GID=, OBJECT\_COMM=, OBJECT\_EXE=, 
 OBJECT\_CMDLINE=, OBJECT\_AUDIT\_SESSION=, OBJECT\_AUDIT\_LOGINUID=, OBJECT\_SYSTEMD\_CGROUP=, OBJECT\_SYSTEMD\_SESSION=, 
 OBJECT\_SYSTEMD\_OWNER\_UID=, OBJECT\_SYSTEMD\_UNIT=, OBJECT\_SYSTEMD\_USER\_UNIT=
+
+----------------
+
+# Ús avançat del Journalctl
+
+Control d'accés:
+
+		usermod --append --groups=adm username
+
+Veure utilització de disc:
+
+		journalctl --disk-usage
+
+----------------
+
+## Esborrar logs antics
+
+Per tamany:
+
+		journalctl --vacuum-size=1G
+
+Per temps:
+
+		journalctl --vacum-time=1years
+
+----------------
+
+## Limitar el tamany del Journal
+
+*/etc/systemd/journald.conf*
+
+* SystemMaxUse=
+
+* SystemKeepFree=
+
+* SystemMaxFileSize=
+
+* RuntimeMaxUse=
+
+* RuntimeKeepFree=
+
+* RuntimeMaxFileSize=
+
+----------------
+
+## Consultar logs d'es de l'entorn gràfic
+
+Instal·lació:
+
+		yum install gnome-system-log
+
+Execució:
+
+		gnome-system-log
 
 ----------------
 
